@@ -9,7 +9,6 @@ import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.os.BatteryManager;
 import android.os.Handler;
-import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -17,92 +16,74 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
-public class BatteryBarController extends LinearLayout {
-
-    private static final String TAG = "BatteryBarController";
-
-    BatteryBar mainBar;
+ public class BatteryBarController extends LinearLayout {
+     private static final String TAG = "BatteryBarController";
+     BatteryBar mainBar;
     BatteryBar alternateStyleBar;
-
-    public static final int STYLE_REGULAR = 0;
+     public static final int STYLE_REGULAR = 0;
     public static final int STYLE_SYMMETRIC = 1;
     public static final int STYLE_REVERSE = 2;
-
-    int mStyle = STYLE_REGULAR;
+     int mStyle = STYLE_REGULAR;
     int mLocation = 0;
-
-    protected final static int CURRENT_LOC = 1;
+     protected final static int CURRENT_LOC = 1;
     int mLocationToLookFor = 0;
-
-    private int mBatteryLevel = 0;
+     private int mBatteryLevel = 0;
     private boolean mBatteryCharging = false;
-
-    boolean isAttached = false;
+     boolean isAttached = false;
     boolean isVertical = false;
-
-    class SettingsObserver extends ContentObserver {
-
-        public SettingsObserver(Handler handler) {
+     class SettingsObserver extends ContentObserver {
+         public SettingsObserver(Handler handler) {
             super(handler);
         }
-
-        void observer() {
+         void observer() {
             ContentResolver resolver = mContext.getContentResolver();
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.BATTERY_BAR_LOCATION), false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.BATTERY_BAR_STYLE), false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.BATTERY_BAR_THICKNESS),false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.STATUSBAR_BATTERY_BAR), false, this);
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.STATUSBAR_BATTERY_BAR_STYLE), false,
+                    this);
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.STATUSBAR_BATTERY_BAR_THICKNESS),
+                    false, this);
         }
-
-        @Override
+         @Override
         public void onChange(boolean selfChange) {
             updateSettings();
         }
     }
-
-    public BatteryBarController(Context context, AttributeSet attrs) {
+     public BatteryBarController(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        if (attrs != null) {
+         if (attrs != null) {
             String ns = "http://schemas.android.com/apk/res/com.android.systemui";
             mLocationToLookFor = attrs.getAttributeIntValue(ns, "viewLocation", 0);
         }
     }
-
-    @Override
+     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (!isAttached) {
             isVertical = (getLayoutParams().height == LayoutParams.MATCH_PARENT);
-
-            isAttached = true;
+             isAttached = true;
             IntentFilter filter = new IntentFilter();
             filter.addAction(Intent.ACTION_BATTERY_CHANGED);
             getContext().registerReceiver(mIntentReceiver, filter);
-
-            SettingsObserver observer = new SettingsObserver(new Handler());
+             SettingsObserver observer = new SettingsObserver(new Handler());
             observer.observer();
             updateSettings();
         }
     }
-
-    private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
+     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-
-            if (Intent.ACTION_BATTERY_CHANGED.equals(action)) {
+             if (Intent.ACTION_BATTERY_CHANGED.equals(action)) {
                 mBatteryLevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
                 mBatteryCharging = intent.getIntExtra(BatteryManager.EXTRA_STATUS, 0) == BatteryManager.BATTERY_STATUS_CHARGING;
                 Prefs.setLastBatteryLevel(context, mBatteryLevel);
             }
         }
     };
-
-    @Override
+     @Override
     protected void onDetachedFromWindow() {
         if (isAttached) {
             isAttached = false;
@@ -110,8 +91,7 @@ public class BatteryBarController extends LinearLayout {
         }
         super.onDetachedFromWindow();
     }
-
-    @Override
+     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (isAttached) {
@@ -121,26 +101,21 @@ public class BatteryBarController extends LinearLayout {
                     updateSettings();
                 }
             }, 500);
-
-        }
+         }
     }
-
-    public void addBars() {
+     public void addBars() {
         // set heights
         DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
-        float dp = (float) Settings.System.getIntForUser(getContext().getContentResolver(),
-                Settings.System.BATTERY_BAR_THICKNESS, 1, UserHandle.USER_CURRENT);
+        float dp = (float) Settings.System.getInt(getContext().getContentResolver(),
+                Settings.System.STATUSBAR_BATTERY_BAR_THICKNESS, 1);
         int pixels = (int) ((metrics.density * dp) + 0.5);
-
-        ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) getLayoutParams();
-
-        if (isVertical)
+         ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) getLayoutParams();
+         if (isVertical)
             params.width = pixels;
         else
             params.height = pixels;
         setLayoutParams(params);
-
-        if (isVertical)
+         if (isVertical)
             params.width = pixels;
         else
             params.height = pixels;
@@ -153,8 +128,7 @@ public class BatteryBarController extends LinearLayout {
         } else if (mStyle == STYLE_SYMMETRIC) {
             BatteryBar bar1 = new BatteryBar(mContext, mBatteryCharging, mBatteryLevel, isVertical);
             BatteryBar bar2 = new BatteryBar(mContext, mBatteryCharging, mBatteryLevel, isVertical);
-
-            if (isVertical) {
+             if (isVertical) {
                 bar2.setRotation(180);
                 addView(bar2, (new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                         LayoutParams.MATCH_PARENT, 1)));
@@ -167,26 +141,22 @@ public class BatteryBarController extends LinearLayout {
                 addView(bar2, (new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                         LayoutParams.MATCH_PARENT, 1)));
             }
-
         } else if (mStyle == STYLE_REVERSE) {
             BatteryBar bar = new BatteryBar(mContext, mBatteryCharging, mBatteryLevel, isVertical);
             bar.setRotation(180);
             addView(bar, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                         LayoutParams.MATCH_PARENT, 1));
-        }
+         }
     }
-
-    public void removeBars() {
+     public void removeBars() {
         removeAllViews();
     }
-
-    public void updateSettings() {
-        mStyle = Settings.System.getIntForUser(getContext().getContentResolver(),
-                Settings.System.BATTERY_BAR_STYLE, 0, UserHandle.USER_CURRENT);
-        mLocation = Settings.System.getIntForUser(getContext().getContentResolver(),
-                Settings.System.BATTERY_BAR_LOCATION, 0, UserHandle.USER_CURRENT);
-
-        if (isLocationValid(mLocation)) {
+     public void updateSettings() {
+        mStyle = Settings.System.getInt(getContext().getContentResolver(),
+                Settings.System.STATUSBAR_BATTERY_BAR_STYLE, 0);
+        mLocation = Settings.System.getInt(getContext().getContentResolver(),
+                Settings.System.STATUSBAR_BATTERY_BAR, 0);
+         if (mLocation > 0 && isLocationValid(mLocation)) {
             removeBars();
             addBars();
             setVisibility(View.VISIBLE);
@@ -195,8 +165,7 @@ public class BatteryBarController extends LinearLayout {
             setVisibility(View.GONE);
         }
     }
-
-    protected boolean isLocationValid(int location) {
+     protected boolean isLocationValid(int location) {
         return mLocationToLookFor == location;
     }
 }
