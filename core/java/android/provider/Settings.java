@@ -4306,6 +4306,15 @@ public final class Settings {
         public static final String QS_TILE_STYLE = "qs_tile_style";
 
         /**
+         * 0 - Default AOSP
+         * 1 - Circles
+         * 2 - Pixel
+         * 3 - Sammy
+         * @hide
+         */
+        public static final String NAVBAR_STYLE = "navbar_style";
+
+        /**
          * Whether to show the battery info on the lockscreen while charging
          * @hide
          */
@@ -4505,6 +4514,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(DISPLAY_COLOR_MODE);
             PRIVATE_SETTINGS.add(SYSTEM_THEME_STYLE);
             PRIVATE_SETTINGS.add(QS_TILE_STYLE);
+            PRIVATE_SETTINGS.add(NAVBAR_STYLE);
         }
 
         /**

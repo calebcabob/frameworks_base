@@ -79,6 +79,13 @@ public class ThemeAccentUtils {
         "com.android.systemui.qstile.squircletrim", // 3
     };
 
+    private static final String[] NAVBAR_THEMES = {
+        "com.android.systemui.navbar.aosp", // 0
+        "com.android.systemui.navbar.circles", // 1
+        "com.android.systemui.navbar.pixel", // 2
+        "com.android.systemui.navbar.sammy", // 3
+    };
+
     private static final String STOCK_DARK_THEME = "com.android.systemui.theme.dark";
 
     // Check for the dark system theme
@@ -255,6 +262,34 @@ public class ThemeAccentUtils {
             String qstiletheme = QS_TILE_THEMES[i];
             try {
                 om.setEnabled(qstiletheme,
+                        false /*disable*/, userId);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Switches navbar style to user selected.
+    public static void updateNavBarStyle(IOverlayManager om, int userId, int navBarStyle) {
+        if (navBarStyle == 0) {
+            defaultNavBar(om, userId);
+        } else {
+            try {
+                om.setEnabled(NAVBAR_THEMES[navBarStyle],
+                        true, userId);
+            } catch (RemoteException e) {
+                Log.w(TAG, "Can't change navbar icons", e);
+            }
+        }
+    }
+
+      // Switches navbar style back to stock.
+    public static void defaultNavBar(IOverlayManager om, int userId) {
+        // skip index 0
+        for (int i = 1; i < NAVBAR_THEMES.length; i++) {
+            String navbartheme = NAVBAR_THEMES[i];
+            try {
+                om.setEnabled(navbartheme,
                         false /*disable*/, userId);
             } catch (RemoteException e) {
                 e.printStackTrace();

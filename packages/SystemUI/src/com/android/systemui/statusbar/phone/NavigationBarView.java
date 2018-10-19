@@ -466,7 +466,7 @@ public class NavigationBarView extends FrameLayout implements PluginListener<Nav
                 R.drawable.ic_sysbar_home_carmode, R.drawable.ic_sysbar_home_carmode);
     }
 
-    private void reloadNavIcons() {
+    public void reloadNavIcons() {
         updateIcons(mContext, Configuration.EMPTY, mConfiguration);
     }
 

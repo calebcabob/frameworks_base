@@ -1193,4 +1193,10 @@ public class NavigationBarFragment extends Fragment implements Callbacks {
         fragmentHost.addTagListener(TAG, listener);
         return navigationBarView;
     }
+
+    public void forceIconsReload() {
+        if (mNavigationBarView != null) {
+            mNavigationBarView.reloadNavIcons();
+        }
+    }
 }
