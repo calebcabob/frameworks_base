@@ -130,6 +130,8 @@ public class NavigationBarView extends FrameLayout implements PluginListener<Nav
     private KeyButtonDrawable mAccessibilityIcon;
     private TintedKeyButtonDrawable mRotateSuggestionIcon;
 
+    private boolean mButtonsOverlay;
+
     private GestureHelper mGestureHelper;
     private final DeadZone mDeadZone;
     private boolean mDeadZoneConsuming = false;
@@ -466,8 +468,14 @@ public class NavigationBarView extends FrameLayout implements PluginListener<Nav
                 R.drawable.ic_sysbar_home_carmode, R.drawable.ic_sysbar_home_carmode);
     }
 
-    public void reloadNavIcons() {
+    private void reloadNavIcons() {
         updateIcons(mContext, Configuration.EMPTY, mConfiguration);
+    }
+
+    public void forceIconsReload(boolean buttonsOverlay) {
+        mButtonsOverlay = buttonsOverlay;
+        reloadNavIcons();
+        mBarTransitions.reapplyDarkIntensity();
     }
 
     private void updateIcons(Context ctx, Configuration oldConfig, Configuration newConfig) {
@@ -544,6 +552,13 @@ public class NavigationBarView extends FrameLayout implements PluginListener<Nav
 
     private KeyButtonDrawable getDrawable(Context lightContext, Context darkContext,
             @DrawableRes int icon, boolean hasShadow) {
+        if (mButtonsOverlay) {
+            final int lightColor = Utils.getColorAttr(lightContext, R.attr.singleToneColor);
+            final int darkColor = Utils.getColorAttr(darkContext, R.attr.singleToneColor);
+            return TintedKeyButtonDrawable.create(getContext().getDrawable(icon),
+                lightColor, darkColor);
+        }
+
         return KeyButtonDrawable.create(lightContext, lightContext.getDrawable(icon),
                 darkContext.getDrawable(icon), hasShadow);
     }

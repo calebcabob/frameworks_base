@@ -3975,6 +3975,10 @@ public class StatusBar extends SystemUI implements DemoMode,
          int navBarStyle = Settings.System.getIntForUser(mContext.getContentResolver(),
                  Settings.System.NAVBAR_STYLE, 0, mLockscreenUserManager.getCurrentUserId());
         ThemeAccentUtils.updateNavBarStyle(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), navBarStyle);
+
+        if (mNavigationBar != null) {
+            mNavigationBar.forceIconsReload(navBarStyle != 0);
+        }
     }
 
      // Unload all qs tile styles back to stock
@@ -5189,9 +5193,6 @@ public class StatusBar extends SystemUI implements DemoMode,
                     Settings.System.NAVBAR_STYLE))) {
                 defaultNavBar();
                 updateNavBarStyle();
-                if (mNavigationBar != null) {
-                    mNavigationBar.forceIconsReload();
-                }
             }
         }
 

@@ -1194,9 +1194,9 @@ public class NavigationBarFragment extends Fragment implements Callbacks {
         return navigationBarView;
     }
 
-    public void forceIconsReload() {
+    public void forceIconsReload(boolean buttonsOverlay) {
         if (mNavigationBarView != null) {
-            mNavigationBarView.reloadNavIcons();
+            mNavigationBarView.forceIconsReload(buttonsOverlay);
         }
     }
 }
