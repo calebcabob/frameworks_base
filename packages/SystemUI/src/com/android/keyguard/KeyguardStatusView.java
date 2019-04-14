@@ -616,8 +616,7 @@ public class KeyguardStatusView extends GridLayout implements
                 mKeyguardSlice.setPadding(0,0,0,0);
                 break;
             case 9: // custom text clock
-                mTextClock.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
-                       View.GONE) : View.VISIBLE);
+                mTextClock.setVisibility(View.VISIBLE);
                 mClockView.setVisibility(View.GONE);
                 mCustomClockView.setVisibility(View.GONE);
                 mAquaClockOneView.setVisibility(View.GONE);
