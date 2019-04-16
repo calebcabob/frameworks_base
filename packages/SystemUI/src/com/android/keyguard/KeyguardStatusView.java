@@ -623,6 +623,8 @@ public class KeyguardStatusView extends GridLayout implements
                 mAquaClockTwoView.setVisibility(View.GONE);
                 mAquaClockThreeView.setVisibility(View.GONE);
                 mAquaClockFourView.setVisibility(View.GONE);
+                mKeyguardSlice.setVisibility(View.GONE);
+                break;
         }
     }
 
