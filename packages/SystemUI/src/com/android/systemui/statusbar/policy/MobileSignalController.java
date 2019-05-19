@@ -129,8 +129,6 @@ public class MobileSignalController extends SignalController<
                 updateTelephony();
             }
         };
-    }
-
         Handler mHandler = new Handler();
         SettingsObserver settingsObserver = new SettingsObserver(mHandler);
         settingsObserver.observe();
@@ -172,6 +170,7 @@ public class MobileSignalController extends SignalController<
                 UserHandle.USER_CURRENT) == 1;
         mapIconSets();
         updateTelephony();
+    }
 
     public void setConfiguration(Config config) {
         mConfig = config;
