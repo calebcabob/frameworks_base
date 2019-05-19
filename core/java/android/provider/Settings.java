@@ -4826,6 +4826,14 @@ public final class Settings {
         /** @hide */
         private static final Validator SHOW_VOLTE_ICON_VALIDATOR = BOOLEAN_VALIDATOR;
 
+        /**
+         * Show four g instead of LTE
+         * @hide
+         */
+        public static final String SHOW_FOURG = "show_fourg";
+
+        /** @hide */
+        public static final Validator SHOW_FOURG_VALIDATOR = BOOLEAN_VALIDATOR;
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
@@ -4904,6 +4912,7 @@ public final class Settings {
             OMNI_DEVICE_PROXI_CHECK_ENABLED,
             OMNI_DEVICE_FEATURE_SETTINGS,
             SHOW_VOLTE_ICON,
+            SHOW_FOURG,
         };
 
         /**
@@ -5046,6 +5055,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(OMNI_DEVICE_PROXI_CHECK_ENABLED);
             PRIVATE_SETTINGS.add(OMNI_DEVICE_FEATURE_SETTINGS);
             PRIVATE_SETTINGS.add(SHOW_VOLTE_ICON);
+            PRIVATE_SETTINGS.add(SHOW_FOURG);
         }
 
         /**
@@ -5155,6 +5165,7 @@ public final class Settings {
             VALIDATORS.put(OMNI_DEVICE_PROXI_CHECK_ENABLED, OMNI_DEVICE_PROXI_CHECK_ENABLED_VALIDATOR);
             VALIDATORS.put(OMNI_DEVICE_FEATURE_SETTINGS, OMNI_DEVICE_FEATURE_SETTINGS_VALIDATOR);
             VALIDATORS.put(SHOW_VOLTE_ICON,SHOW_VOLTE_ICON_VALIDATOR);
+            VALIDATORS.put(SHOW_FOURG, SHOW_FOURG_VALIDATOR);
         }
 
         /**

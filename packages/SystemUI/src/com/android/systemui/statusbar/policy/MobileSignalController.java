@@ -85,6 +85,9 @@ public class MobileSignalController extends SignalController<
     private ImsManager mImsManager;
     private boolean mVoLTEicon;
 
+    // 4G instead of LTE
+    private boolean mShow4G;
+
     // TODO: Reduce number of vars passed in, if we have the NetworkController, probably don't
     // need listener lists anymore.
     public MobileSignalController(Context context, Config config, boolean hasMobileData,
@@ -143,6 +146,9 @@ public class MobileSignalController extends SignalController<
             Uri uri = Settings.System.getUriFor(Settings.System.SHOW_VOLTE_ICON);
             resolver.registerContentObserver(uri, false,
                     this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.SHOW_FOURG),false,
+                    this, UserHandle.USER_ALL);
             updateSettings();
         }
 
@@ -161,7 +167,10 @@ public class MobileSignalController extends SignalController<
         mVoLTEicon = Settings.System.getIntForUser(resolver,
                 Settings.System.SHOW_VOLTE_ICON, 0,
                 UserHandle.USER_CURRENT) == 1;
-
+        mShow4G = Settings.System.getIntForUser(resolver,
+                Settings.System.SHOW_FOURG, 0,
+                UserHandle.USER_CURRENT) == 1;
+        mapIconSets();
         updateTelephony();
 
     public void setConfiguration(Config config) {
@@ -282,7 +291,7 @@ public class MobileSignalController extends SignalController<
         mNetworkToIconLookup.put(TelephonyManager.NETWORK_TYPE_HSPA, hGroup);
         mNetworkToIconLookup.put(TelephonyManager.NETWORK_TYPE_HSPAP, hPlusGroup);
 
-        if (mConfig.show4gForLte) {
+        if (mShow4G) {
             mNetworkToIconLookup.put(TelephonyManager.NETWORK_TYPE_LTE, TelephonyIcons.FOUR_G);
             if (mConfig.hideLtePlus) {
                 mNetworkToIconLookup.put(TelephonyManager.NETWORK_TYPE_LTE_CA,
