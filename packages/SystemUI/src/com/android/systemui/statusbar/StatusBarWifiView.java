@@ -16,6 +16,9 @@
 
 package com.android.systemui.statusbar;
 
+import static android.provider.Settings.System.SHOW_VOLTE_ICON;
+
+
 import static com.android.systemui.statusbar.StatusBarIconView.STATE_DOT;
 import static com.android.systemui.statusbar.StatusBarIconView.STATE_HIDDEN;
 import static com.android.systemui.statusbar.StatusBarIconView.STATE_ICON;
@@ -23,6 +26,9 @@ import static com.android.systemui.statusbar.policy.DarkIconDispatcher.getTint;
 import static com.android.systemui.statusbar.policy.DarkIconDispatcher.isInArea;
 
 import android.content.Context;
+import android.os.UserHandle;
+import android.provider.Settings;
+import android.content.ContentResolver;
 import android.content.res.ColorStateList;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -168,8 +174,17 @@ public class StatusBarWifiView extends FrameLayout implements DarkReceiver,
         int dualToneDarkTheme = Utils.getThemeAttr(mContext, R.attr.darkIconTheme);
         mLightContext = new ContextThemeWrapper(mContext, dualToneLightTheme);
         mDarkContext = new ContextThemeWrapper(mContext, dualToneDarkTheme);
-
-        mWifiGroup = findViewById(R.id.wifi_group);
+        //Use new layout params when VoLTE icon is showing in status bar
+        if (!isVolteIconEnabled()) {
+            mWifiGroup = findViewById(R.id.wifi_group);
+        } else {
+			mWifiGroup = findViewById(R.id.wifi_group);
+			MarginLayoutParams lp = (MarginLayoutParams) mWifiGroup.getLayoutParams();
+			lp = (MarginLayoutParams) mWifiGroup.getLayoutParams();
+            lp.setMarginEnd(
+            getResources().getDimensionPixelSize(R.dimen.wifi_margin_end_with_volte));
+            mWifiGroup.setLayoutParams(lp);
+		}
         mWifiIcon = findViewById(R.id.wifi_signal);
         mIn = findViewById(R.id.wifi_in);
         mOut = findViewById(R.id.wifi_out);
@@ -245,6 +260,11 @@ public class StatusBarWifiView extends FrameLayout implements DarkReceiver,
         mAirplaneSpacer.setVisibility(mState.airplaneSpacerVisible ? View.VISIBLE : View.GONE);
         mSignalSpacer.setVisibility(mState.signalSpacerVisible ? View.VISIBLE : View.GONE);
         setVisibility(mState.visible ? View.VISIBLE : View.GONE);
+    }
+
+    private boolean isVolteIconShowing() {
+        return Settings.System.getInt(mContext.getContentResolver(),
+            Settings.System.SHOW_VOLTE_ICON, 1) == 1;
     }
 
     @Override

@@ -72,4 +72,7 @@
     <dimen name="qs_header_image_side_margin">4dp</dimen>
     <dimen name="qs_header_image_bottom_margin">4dp</dimen>
 
+    <!-- VoLTE icon spacing helper with WiFi icon -->
+    <dimen name="wifi_margin_end_with_volte">4dp</dimen>
+
 </resources>

@@ -558,12 +558,6 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                 || anyMobileVisible || mVpnVisible || mEthernetVisible;
         int endPadding = mBatteryVisible ? (anythingVisible ? mEndPadding : mEndPaddingNothingVisible) : 0;
         setPaddingRelative(0, 0, endPadding, 0);
-
-        if ((mMobileImsImageView.getVisibility() == View.VISIBLE) && mWifiVisible) {
-            mWifiSignalSpacer.setVisibility(View.VISIBLE);
-        } else {
-            mWifiSignalSpacer.setVisibility(View.GONE);
-        }
     }
 
     /**
@@ -580,7 +574,6 @@ public class SignalClusterView extends LinearLayout implements NetworkController
             imageView.setImageDrawable(new ScalingDrawableWrapper(icon, mIconScaleFactor));
         }
     }
-
 
     @Override
     public void onDarkChanged(Rect tintArea, float darkIntensity, int tint) {

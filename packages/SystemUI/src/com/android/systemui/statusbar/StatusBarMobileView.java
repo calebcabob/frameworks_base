@@ -276,6 +276,16 @@ public class StatusBarMobileView extends FrameLayout implements DarkReceiver,
         return mVisibleState;
     }
 
+    public boolean isVolteIconShowing(View view) {
+        return (mMobileImsImageView.getVisibility() == View.VISIBLE);
+	}
+
+    public void showVolteIconEnabled() {
+		ContentResolver resolver = mContext.getContentResolver();
+            isVolteIconShowing = Settings.System.getInt(
+            resolver, Settings.System.SHOW_VOLTE_ICON, 0) == 1;
+	}
+
     @VisibleForTesting
     public MobileIconState getState() {
         return mState;
