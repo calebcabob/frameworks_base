@@ -221,12 +221,13 @@ public class CustomTextClock extends TextView {
             }
 
             if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
+                langHasChanged = true;
+                curLang = Locale.getDefault().getLanguage();
+                topText = getResources().getString(R.string.custom_text_clock_top_text_default);
                 TensString = getResources().getStringArray(R.array.TensString);
                 UnitsString = getResources().getStringArray(R.array.UnitsString);
                 TensStringH = getResources().getStringArray(R.array.TensStringH);
                 UnitsStringH = getResources().getStringArray(R.array.UnitsStringH);
-                curLang = Locale.getDefault().getLanguage();
-                topText = getResources().getString(R.string.custom_text_clock_top_text_default);
                 highNoonFirstRow = getResources().getString(R.string.high_noon_first_row);
                 highNoonSecondRow = getResources().getString(R.string.high_noon_second_row);
                 langHasChanged = true;
@@ -252,7 +253,7 @@ public class CustomTextClock extends TextView {
         tens =  num / 10;
 
         if(num >= 20) {
-            if ( units == 0 ) {
+            if ( units == 0 && !LangGuard.isAvailable(langExceptions,curLang)) {
                 NumString = TensStringH[tens];
             } else {
                 if (LangGuard.isAvailable(langExceptions,curLang)) {
@@ -321,10 +322,13 @@ public class CustomTextClock extends TextView {
                     NumString = TensString[tens]+" "+UnitsString[units].substring(2, UnitsString[units].length());
                 }
             }
-        } else if (num < 10 ) {
-            NumString = UnitsString[num];
-        } else if (num >= 10 && num < 20) {
-            NumString = UnitsString[num];
+        } else { 
+            if (num < 10 ) {
+                NumString = UnitsString[num];
+            }
+            if (num >= 10 && num < 20) {
+                NumString = UnitsString[num];
+            }
         }
         return NumString;
     }
