@@ -4274,6 +4274,14 @@ public final class Settings {
         public static final String QS_TILE_STYLE = "qs_tile_style";
 
         /**
+         * 0 - Default
+         * 1 - MD2 Switch
+         * 2 - OnePlus Switch
+         * @hide
+         */
+        public static final String SWITCH_STYLER = "switch_styler";
+
+        /**
          * 0 - fullscreen
          * 1 - partial
          * @hide
